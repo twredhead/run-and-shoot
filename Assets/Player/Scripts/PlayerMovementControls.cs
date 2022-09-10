@@ -6,7 +6,8 @@ public class PlayerMovementControls : MonoBehaviour
 {
     [SerializeField] float walkSpeed = 2f;
     [SerializeField] float runSpeed = 4f;
-    [SerializeField] float jumpHeight = 100f;
+    [SerializeField] float jumpHeight = 4f;
+    [SerializeField] float movementForce = 1000f;
 
     bool isAirborn = false;
     float currentVelocity;
@@ -36,18 +37,20 @@ public class PlayerMovementControls : MonoBehaviour
     void PlayerMove()
     {
 
-        if ( isAirborn == false )
-        {
+        if ( isAirborn == true ) { return; }
+        
         // get player input
         float forwardBackward = Input.GetAxis("Vertical");
         float strafe = Input.GetAxis("Horizontal");
 
         // convert input to speed, Time.deltaTime ensures machine independent performance 
-        float speed = RunSpeedOrWalkSpeed() * Time.deltaTime;
-        
-        // jump is handled elsewhere
-        transform.Translate(strafe*speed, 0, forwardBackward*speed);
-        
+        float speed = RunSpeedOrWalkSpeed();
+
+        Vector3 forceVector = new Vector3(strafe, 0, forwardBackward) * movementForce * Time.deltaTime;
+
+        if(rb.velocity.sqrMagnitude < speed*speed)
+        {
+            rb.AddForce(forceVector, ForceMode.Acceleration);
         }
 
     }
@@ -78,8 +81,6 @@ public class PlayerMovementControls : MonoBehaviour
         
 
     }
-
-    
 
     
 }
