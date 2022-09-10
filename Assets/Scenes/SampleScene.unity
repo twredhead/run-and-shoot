@@ -245,6 +245,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall
       objectReference: {fileID: 0}
+    - target: {fileID: 4087701768495744469, guid: dfc2b4e1a64e8c440833c4fa6a07786f, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfc2b4e1a64e8c440833c4fa6a07786f, type: 3}
 --- !u!1 &705507993
@@ -461,6 +465,18 @@ PrefabInstance:
     - target: {fileID: 1398652050457137424, guid: 582817a0b767edf4dbdb81687bf5471c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785615219662523735, guid: 582817a0b767edf4dbdb81687bf5471c, type: 3}
+      propertyPath: near clip plane
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247602065005142265, guid: 582817a0b767edf4dbdb81687bf5471c, type: 3}
+      propertyPath: lookSpeed
+      value: 550
+      objectReference: {fileID: 0}
+    - target: {fileID: 3247602065005142265, guid: 582817a0b767edf4dbdb81687bf5471c, type: 3}
+      propertyPath: lookRangeUp
+      value: 285
       objectReference: {fileID: 0}
     - target: {fileID: 3851752706890398399, guid: 582817a0b767edf4dbdb81687bf5471c, type: 3}
       propertyPath: m_RootOrder

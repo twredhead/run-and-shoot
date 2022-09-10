@@ -13,10 +13,15 @@ public class PlayerMovementControls : MonoBehaviour
     float currentVelocity;
 
     Rigidbody rb;
+
+    void Awake() 
+    {
+        rb = GetComponent<Rigidbody>();
+    }
     
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
     }
 
     void OnCollisionEnter(Collision other) 
@@ -24,7 +29,6 @@ public class PlayerMovementControls : MonoBehaviour
         if( other.gameObject.tag == "surface")
         {
             isAirborn = false;
-
         }
     }
 
@@ -50,7 +54,7 @@ public class PlayerMovementControls : MonoBehaviour
 
         if(rb.velocity.sqrMagnitude < speed*speed)
         {
-            rb.AddForce(forceVector, ForceMode.Acceleration);
+            rb.AddRelativeForce(forceVector, ForceMode.Acceleration);
         }
 
     }
@@ -79,7 +83,6 @@ public class PlayerMovementControls : MonoBehaviour
             isAirborn = true;
         }
         
-
     }
 
     
