@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MouseLook))]
 public class PlayerMovementControls : MonoBehaviour
 {
     [SerializeField] float walkSpeed = 2f;
@@ -25,7 +26,8 @@ public class PlayerMovementControls : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision other) 
-    {
+    {   
+        // identifies that the player is no longer airborn.
         if( other.gameObject.tag == "surface")
         {
             isAirborn = false;
@@ -40,18 +42,21 @@ public class PlayerMovementControls : MonoBehaviour
 
     void PlayerMove()
     {
-
+        // cannot walk or run if not on a surface
         if ( isAirborn == true ) { return; }
         
-        // get player input
         float forwardBackward = Input.GetAxis("Vertical");
         float strafe = Input.GetAxis("Horizontal");
 
-        // convert input to speed, Time.deltaTime ensures machine independent performance 
+        // speed is from player input
         float speed = RunSpeedOrWalkSpeed();
 
+        // force vector for movement
         Vector3 forceVector = new Vector3(strafe, 0, forwardBackward) * movementForce * Time.deltaTime;
 
+        // acceleration is proportional to force and we do not want constant acceleration.
+        // To guard against this, movement force is only added if the magnitude of the velocity is less than 
+        // the selected speed.
         if(rb.velocity.sqrMagnitude < speed*speed)
         {
             rb.AddRelativeForce(forceVector, ForceMode.Acceleration);
