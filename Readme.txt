@@ -16,7 +16,7 @@ FPS Controller
 
 Functionality: The FPS controller allows the player to move around the world using
 the WASD keys. The player can look around, and steer with the mouse. There are 
-two speed that the player can move at, and the player can jump. The movement 
+two speed that the player can move at and the player can jump. The movement 
 controlls are in the script PlayerMovementControls.cs, and the steering and looking
 mouse controls are in MouseLook.cs. These two scripts must be together on the 
 player game object, and the player game object must have a camera childed to it. 
@@ -29,7 +29,7 @@ Functionality that could be added:
    while the player is moving.
 
 ************************************************************************************
-PlayerMovementControls notes:
+PlayerMovementControls.cs notes:
 
 The tag, "surface" is used in OnCollisionEnter() to detect if the player 
 has collided with the ground. Collisions with "surface" objects sets the boolean
@@ -41,7 +41,7 @@ ToDo: right now is airBorn is only switched to true when the player jumps.
 It should also be switched if the player falls off something. 
 
 ************************************************************************************
-MouseLook notes:
+MouseLook.cs notes:
 
 For the MouseLook script to work as intended, the camera must be hooked up to the
 serialized field called Player Camera in the inspector when the player game object
@@ -55,6 +55,38 @@ the gun will only be able to shoot in the XZ plane.
 
 The player object is rotated about the Y axis using X Axis mouse movement. This allows
 the player to change the direction that they are moving.
+
+************************************************************************************
+************************************************************************************
+
+Enemy Navigation & AI
+
+Enemy navigation is taken care of in the script EnemyAI.cs. Enemies can either be
+patrollers (default) or be sentries. Patrollers will move toward the nearest 
+waypoint that is not the last waypoint they went to. Waypoints are empty objects
+that have a script called Waypoint as a component. Additionally, each enemy must
+have a NavMeshPro component as once the closest waypoint (that is not the last 
+waypoint) is found NavMeshPro.SetDestination(destination) is used to navigate toward 
+the destination waypoint.
+
+Future functionality:
+1. Enemy attack: when the enemy locates the player, isPatrolling will be set to false
+   and the enemy will stop patrolling and start attacking.
+2. The enemy should be able to shoot the player.
+
+************************************************************************************
+EnemyAI.cs notes:
+
+For navigation the EnemyAI.cs script finds each
+instance of Waypoint in the scene and iterates through an array containing their
+transforms in order find the closest Waypoint. The destination is set to be the
+closest waypoint that is not equal to the last destination. The navigation only
+occurs if the bool isPatrolling is set to true. This will become useful as 
+enemy attack AI is developed. 
+
+
+
+
 
 
 
