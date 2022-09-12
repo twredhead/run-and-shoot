@@ -62,11 +62,11 @@ the player to change the direction that they are moving.
 Enemy Navigation & AI
 
 Enemy navigation is taken care of in the script EnemyAI.cs. Enemies can either be
-patrollers (default) or be sentries. Patrollers will move toward the nearest 
-waypoint that is not the last waypoint they went to. Waypoints are empty objects
+patrollers (default) or sentries. Patrollers will move toward the nearest 
+waypoint that is not the last waypoint visited. Waypoints are empty objects
 that have a script called Waypoint as a component. Additionally, each enemy must
 have a NavMeshPro component as once the closest waypoint (that is not the last 
-waypoint) is found NavMeshPro.SetDestination(destination) is used to navigate toward 
+waypoint) is found, NavMeshPro.SetDestination(destination) is used to navigate toward 
 the destination waypoint.
 
 Future functionality:
