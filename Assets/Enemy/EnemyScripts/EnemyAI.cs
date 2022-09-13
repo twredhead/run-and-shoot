@@ -7,6 +7,7 @@ public class EnemyAI : MonoBehaviour
 {   
     // flag to turn on, or off patrolling. If enemy is aware of the player, is patrolling becomes false
     [SerializeField] bool isPatrolling = true; // turn this off if you want a sentry.
+    public bool IsPatrolling { get { return isPatrolling; } } // isPatrolling needs to be switched from other scripts.
 
     Waypoint[] waypoints;
     NavMeshAgent navigation;
@@ -17,6 +18,19 @@ public class EnemyAI : MonoBehaviour
 
     float minSqrDistance = 1f;
 
+    /*******************************************************************************************************************************/
+    /***************************************************Public Methods**************************************************************/
+    /*******************************************************************************************************************************/
+
+    public void SetIsPatrolling(bool trueOrFalse)
+    {
+        isPatrolling = trueOrFalse;
+    }
+
+
+    /*******************************************************************************************************************************/
+    /***************************************************Awake, Start, Update********************************************************/
+    /*******************************************************************************************************************************/    
     void Awake() 
     {
         navigation = GetComponent<NavMeshAgent>();    
@@ -30,15 +44,25 @@ public class EnemyAI : MonoBehaviour
 
 
     void Update()
-    {
-        Patrol();
+    {   
+        if ( isPatrolling == false)
+        {
+            navigation.isStopped = true;
+        }
+        else
+        {
+            Patrol();
+        }
+
     }
+
+    /*******************************************************************************************************************************/
+    /***************************************************Navigation Methods**********************************************************/
+    /*******************************************************************************************************************************/ 
 
     void Patrol()
     {   
-        // do not patrol if false
-        if ( isPatrolling == false ) { return; }
-        
+
         FindWaypoint();
 
         // don't crash if no waypoint is found.

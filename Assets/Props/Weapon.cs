@@ -6,18 +6,34 @@ public class Weapon : MonoBehaviour
 {   
     
     [SerializeField] float range = 50f;
+    [SerializeField] float hitPointsDamage = 5f;
     [SerializeField] Transform shooter;
     [SerializeField] ParticleSystem gunShotVFX;
     [SerializeField] GameObject enemyHitVFX;
 
     RaycastHit hit;
+    EnemyHealth enemyHealth;
 
     public void FireWeapon()
     {
         if ( Physics.Raycast(transform.position, shooter.transform.forward, out hit, range) )
-        {
+        {   
             WeaponVFX();
+            DealDamage();
         }
+    }
+
+    void DealDamage()
+    {
+        if ( hit.transform.tag == "enemy")
+        {   
+            enemyHealth = hit.transform.GetComponent<EnemyHealth>();
+
+            if ( enemyHealth == null ) { return; } // protect against crash
+
+            enemyHealth.DamageTaken(hitPointsDamage);
+        }
+        // todo: add else if statement for player
     }
 
     void WeaponVFX()
@@ -45,4 +61,6 @@ public class Weapon : MonoBehaviour
         GameObject impact = Instantiate(enemyHitVFX, hit.point, Quaternion.LookRotation(hit.normal));
         Destroy(impact, 1); // get rid of the effect after 1 second
     }
+
+
 }
