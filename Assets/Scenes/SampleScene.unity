@@ -2949,7 +2949,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7931199161732309197, guid: 4a1b97b9f17604f48af8c2ff7e00f5d2, type: 3}
       propertyPath: m_Name
-      value: Plane
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 7931199161732309197, guid: 4a1b97b9f17604f48af8c2ff7e00f5d2, type: 3}
       propertyPath: m_StaticEditorFlags
