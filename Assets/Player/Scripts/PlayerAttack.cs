@@ -11,17 +11,18 @@ public class PlayerAttack : MonoBehaviour
 
         weapon = GetComponentInChildren<Weapon>();
 
-        Debug.Log($"My weapon is {weapon.name}");
-
     }
 
-    void Update() 
+    void Update()
     {
-        if ( Input.GetMouseButtonDown(0) )
+        Shoot();
+    }
+
+    void Shoot()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
             weapon.FireWeapon();
-        }    
+        }
     }
-
-
 }

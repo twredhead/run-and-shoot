@@ -3,6 +3,7 @@ Run and Shoot
 
 ************************************************************************************
 ************************************************************************************
+************************************************************************************
 
 This is a small first person shooter project. The goal at the outset was to have a 
 create a first person controller, allow the player to shoot things with raycasting,
@@ -11,8 +12,40 @@ and have enemies patrol and shoot at the player when discovered.
 
 ************************************************************************************
 ************************************************************************************
+************************************************************************************
 
-FPS Controller
+Scripts with Public Methods:
+************************************************************************************
+
+- Weapon.cs
+
+   This script should be attached to any weapon prefab that is to be fired like a gun.
+   Weapon.cs currently has several serialized fields. The most important is called 
+   'shooter'. The transform of 'shooter' is used in the raycast for the start position 
+   and for the direction. The serialized field called 'gunShotVFX' should contain a 
+   particle system with the desired FX. When FireWeapon() is called, the chosen particle 
+   system will play, provided the field is not null. The serialized field called 'range'
+   should be fiddled with in the inspector. This field is how far the raycast can go.
+   
+   Public Methods: 
+   
+   - FireWeapon()
+
+      This method uses a raycast to simulate a bullet. It handles the vfx for the gun
+      being fired, and it also handles the vfx for visual feedback on what has been hit
+
+      TODO: add a vfx for hitting the environment, not just the player or enemy.
+
+************************************************************************************
+************************************************************************************
+************************************************************************************
+      
+
+Player Controls 
+
+************************************************************************************
+************************************************************************************
+FPS controller
 
 Functionality: The FPS controller allows the player to move around the world using
 the WASD keys. The player can look around, and steer with the mouse. There are 
@@ -56,6 +89,26 @@ the gun will only be able to shoot in the XZ plane.
 The player object is rotated about the Y axis using X Axis mouse movement. This allows
 the player to change the direction that they are moving.
 
+************************************************************************************
+************************************************************************************
+Attack Controls
+
+The player is able to attack by clicking the left mouse button. The attack script
+is on the player camera as the player camera has the transform that can look up or 
+down. The actual firing of the weapon is taken care of by the script Weapon.cs, which
+is attached to the weapon prefab. The reason I decided to put the firing script on 
+the weapn is so that the enemies will be able to use the same prefab.
+Currently, the only script that deals with player attacking is PlayerAttack.cs
+
+************************************************************************************
+PlayerAttack notes:
+
+This script currently does one thing. It calls the public method FireWeapon() from
+Weapon() when the left mouse button is pressed down. It makes use of Start() to 
+find the child component Weapon.cs.
+
+
+************************************************************************************
 ************************************************************************************
 ************************************************************************************
 

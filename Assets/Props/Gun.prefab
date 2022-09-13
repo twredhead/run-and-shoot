@@ -66,6 +66,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 50
   shooter: {fileID: 0}
+  gunShotVFX: {fileID: 2898146057910283908}
+  enemyHitVFX: {fileID: 3039100851001815069, guid: 9df0eab9fc0357d43a4dc490d9dfbb04, type: 3}
 --- !u!1 &517907563501909782
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,6 +540,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c217899a87ad18458742dc4b3d1769a, type: 3}
+--- !u!198 &2898146057910283908 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7535550612917348998, guid: 6c217899a87ad18458742dc4b3d1769a, type: 3}
+  m_PrefabInstance: {fileID: 4660081192058127362}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2898146057910283909 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7535550612917348999, guid: 6c217899a87ad18458742dc4b3d1769a, type: 3}
