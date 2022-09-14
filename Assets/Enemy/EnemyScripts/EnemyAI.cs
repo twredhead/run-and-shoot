@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,13 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {   
+
+    [SerializeField] EnemyAttack weapon;
+    [SerializeField] Transform target; // look to see this. If you can see it. Shoot at it.
+
     // flag to turn on, or off patrolling. If enemy is aware of the player, is patrolling becomes false
     [SerializeField] bool isPatrolling = true; // turn this off if you want a sentry.
-    public bool IsPatrolling { get { return isPatrolling; } } // isPatrolling needs to be switched from other scripts.
+    [SerializeField] float rotationSpeed = 10f;
 
     Waypoint[] waypoints;
     NavMeshAgent navigation;
@@ -16,7 +21,10 @@ public class EnemyAI : MonoBehaviour
     Transform destination;
     Transform lastDestination;
 
+    RaycastHit objectInSight;
+
     float minSqrDistance = 1f;
+    bool canSeeTarget = false; // switch to true if enemy can see player and back to false they no longer can
 
     /*******************************************************************************************************************************/
     /***************************************************Public Methods**************************************************************/
@@ -24,6 +32,7 @@ public class EnemyAI : MonoBehaviour
 
     public void SetIsPatrolling(bool trueOrFalse)
     {
+        // change is patrolling from outside this script.
         isPatrolling = trueOrFalse;
     }
 
@@ -33,7 +42,8 @@ public class EnemyAI : MonoBehaviour
     /*******************************************************************************************************************************/    
     void Awake() 
     {
-        navigation = GetComponent<NavMeshAgent>();    
+        navigation = GetComponent<NavMeshAgent>(); 
+           
     }
 
     void Start() 
@@ -54,11 +64,22 @@ public class EnemyAI : MonoBehaviour
             Patrol();
         }
 
+        LookForPlayer();
+
+        if ( canSeeTarget == true )
+        {
+            // attack the player
+            PointGunAtTarget();
+            Attack();
+        }
+
     }
+
+
 
     /*******************************************************************************************************************************/
     /***************************************************Navigation Methods**********************************************************/
-    /*******************************************************************************************************************************/ 
+    /*******************************************************************************************************************************/
 
     void Patrol()
     {   
@@ -110,7 +131,76 @@ public class EnemyAI : MonoBehaviour
             }
 
         }
-    
+        
+    }
+
+    /*******************************************************************************************************************************/
+    /***************************************************Find and Kill Player********************************************************/
+    /*******************************************************************************************************************************/
+
+    void LookForPlayer()
+    {
+        Vector3 searchDirection = DirectionToTarget(); // vector from position to target
+
+        if (Physics.Raycast(transform.position, searchDirection, out objectInSight))
+        {
+            if (objectInSight.transform == target)
+            {
+                canSeeTarget = true;
+                isPatrolling = false;
+            }
+            else
+            {
+                canSeeTarget = false;
+
+            }
+        }
+
+    }
+
+    Vector3 DirectionToTarget()
+    {
+        return target.position - transform.position;
+    }
+
+    void PointGunAtTarget()
+    {
+        
+        RotateBodyTowardTarget();
+
+        RotateGunTowardTarget();
+        
+    }
+
+    void RotateBodyTowardTarget()
+    {
+        Vector3 targetDirection = DirectionToTarget().normalized;
+
+        float xCoordinate = targetDirection.x;
+        float zCoordinate = targetDirection.z; 
+
+        // we only want to rotate the body in the horizontal plane. So keep y coordinate constant.
+        Quaternion rotateTo = Quaternion.LookRotation( new Vector3( xCoordinate, transform.position.y, zCoordinate ) );
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotateTo, Time.deltaTime * rotationSpeed);
+
+    }
+
+    void RotateGunTowardTarget()
+    {
+        Vector3 targetDirection = DirectionToTarget().normalized;
+
+        // We only want to rotate the gun in the yz plane 
+        Quaternion rotateTo = Quaternion.LookRotation( targetDirection );
+
+        weapon.transform.rotation = Quaternion.Slerp(weapon.transform.rotation, rotateTo, Time.deltaTime * rotationSpeed);
+
+    }
+
+    void Attack()
+    {   
+        weapon.Shoot();
+        
     }
 
 }

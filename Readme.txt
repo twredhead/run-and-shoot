@@ -14,7 +14,7 @@ and have enemies patrol and shoot at the player when discovered.
 ************************************************************************************
 ************************************************************************************
 
-Scripts with Public Methods:
+Neutral scripts (not player or enemy): 
 ************************************************************************************
 
 - Weapon.cs
@@ -36,25 +36,8 @@ Scripts with Public Methods:
       TODO: 
       1. Add a vfx for hitting the environment, not just the player or enemy.
       2. Add functionality to damage player health if player is hit by raycast.
-
-- EnemyAI.cs
-
-   This script has a public method for setting whether the enemy is patrolling or not.
-
-   Public Methods:
-   - IsPatrolling(bool trueOrFalse) 
-      This method is used to set the bool isPatrolling to true or false based on
-      the input parameter.
-
-- EnemyHealth.cs
-
-   This script has a public method for taking damage. It should be called in the
-   from the player weapon.
-
-   Public Methods:
-   - DamageTaken(float hitPointDamage)
-      This method is called in the weapon script when a raycast has hit an enemy 
-      object.
+      3. Make shooting a coroutine to stop the player, and the enemy, from spamming
+         FireWeapon().
 
 
 ***********************************************************************************
@@ -125,9 +108,7 @@ Currently, the only script that deals with player attacking is PlayerAttack.cs
 PlayerAttack notes:
 
 This script currently does one thing. It calls the public method FireWeapon() from
-Weapon() when the left mouse button is pressed down. It makes use of Start() to 
-find the child component Weapon.cs.
-
+Weapon() when the left mouse button is pressed down. 
 
 ************************************************************************************
 ************************************************************************************
@@ -139,34 +120,64 @@ Enemy Scripts
 ************************************************************************************
 Enemy AI
 
+Navigation:
+
 Enemy navigation is taken care of in the script EnemyAI.cs. Enemies can either be
 patrollers (default) or sentries. Patrollers will move toward the nearest 
 waypoint that is not the last waypoint visited. Waypoints are empty objects
 that have a script called Waypoint as a component. Additionally, each enemy must
 have a NavMeshPro component as once the closest waypoint (that is not the last 
 waypoint) is found, NavMeshPro.SetDestination(destination) is used to navigate toward 
-the destination waypoint.
+the destination waypoint. 
+For navigation the EnemyAI.cs script finds each instance of Waypoint in the scene and 
+iterates through an array containing their transforms in order find the closest Waypoint. 
+The destination is set to be the closest waypoint that is not equal to the last 
+destination. The navigation only occurs if the bool isPatrolling is set to true. 
+If damage is taken isPatrolling is set to true.
 
-Future functionality:
-1. Enemy attack: when the enemy locates the player, isPatrolling will be set to false
-   and the enemy will stop patrolling and start attacking.
-2. The enemy should be able to shoot the player.
+Searching for Player:
+
+The enemy is constantly searching for the player using a ray cast to simulate vision.
+Enemy vision works by telling the enemy where the player is, then sending a raycast
+in the direction of the player. If the object hit by the raycast is the player set the 
+bool canSeeTarget to true, otherwise set canSeeTarget to false. 
+
+Attack Player:
+
+If canSeeTarget is true, the enemy rotates toward the target in the xz plane. The
+weapon is also rotated toward the target, but it also rotates in the yz plane so
+that the weapon points toward the player if it is not on the ground. To attack
+the player Shoot from EnemyAttack.cs is called.
 
 ************************************************************************************
-EnemyAI.cs notes:
+Notes:
 
-For navigation the EnemyAI.cs script finds each
-instance of Waypoint in the scene and iterates through an array containing their
-transforms in order find the closest Waypoint. The destination is set to be the
-closest waypoint that is not equal to the last destination. The navigation only
-occurs if the bool isPatrolling is set to true. Currently, isPatrolling will be
-set to false when damage is taken. isPatrolling is still a private bool, but
-its value can be looked up as a property, and it can be set with the setter method
-SetIsPatrolling. 
+Public Methods:
+- IsPatrolling(bool trueOrFalse) 
+   This method is used to set the bool isPatrolling to true or false based on
+   the input parameter.
 
-Todo: add enemy attack behaviour. This behaviour should be triggered by two conditions
-1. No longer patrolling
-2. target to attack found
+
+************************************************************************************
+************************************************************************************
+Enemy Attack
+
+This script should be a component on a empty object that has a weapon prefab as a 
+child. The empty object acts like the camera does in the player attack script.
+
+************************************************************************************
+Notes:
+
+Public Methods:
+- Shoot()
+   This method calls FireWeapon from the Weapon.cs and shoots the gun.
+
+   ToDo: 
+   1. This method needs to be something like a coroutine to stop it from firing
+      every frame.
+   2. There needs to be a degree of randomness to whether the player is hit or not.
+      Currently the player will be hit every time.
+
 
 ************************************************************************************
 ************************************************************************************
@@ -175,13 +186,19 @@ Enemy health
 The enemy health is handled in the script EnemyHealth.cs. This script deals with the
 hit points and eventual death of an enemy.
 
-************************************************************************************
-EnemyHealth.cs notes:
-
 Currently Weapon.cs calls the public method DamageTaken from this script.
+
+************************************************************************************
+Notes:
+
+Public Methods:
+- DamageTaken(float hitPointDamage)
+   This method is called in the weapon script when a raycast has hit an enemy 
+   object.
 
 Todo: it would be fun to add a funny vfx for enemy death. Currently the enemy will 
 simply disappear when hitPoint <= 0. 
+
 
 
 

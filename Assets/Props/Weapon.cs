@@ -33,7 +33,10 @@ public class Weapon : MonoBehaviour
 
             enemyHealth.DamageTaken(hitPointsDamage);
         }
-        // todo: add else if statement for player
+        else if ( hit.transform.tag == "player" )
+        {
+            // damage player health
+        }
     }
 
     void WeaponVFX()
