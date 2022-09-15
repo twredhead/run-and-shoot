@@ -6,6 +6,9 @@ public class PlayerAttack : MonoBehaviour
 {
     Weapon weapon;
 
+    float waitToShoot = .5f;
+
+    bool canShoot = true;
     void Start()
     {
 
@@ -14,15 +17,26 @@ public class PlayerAttack : MonoBehaviour
     }
 
     void Update()
-    {
-        Shoot();
+    {   
+        if (Input.GetMouseButtonDown(0) && canShoot == true ) 
+        {
+            StartCoroutine(Shoot());
+        }      
     }
 
-    void Shoot()
+    IEnumerator Shoot()
+    {   
+        canShoot = false;
+        
+        weapon.FireWeapon();
+        
+        yield return new WaitForSeconds(waitToShoot);
+        
+        canShoot = true;
+    }
+
+    void ShootTimer()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            weapon.FireWeapon();
-        }
+
     }
 }

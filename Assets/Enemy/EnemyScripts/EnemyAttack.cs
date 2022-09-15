@@ -13,8 +13,8 @@ public class EnemyAttack : MonoBehaviour
 
     public void Shoot()
     {
-        
-        weapon.FireWeapon();
+    
+        weapon.FireWeapon();   
         
     }
 }

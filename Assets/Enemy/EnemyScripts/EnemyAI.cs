@@ -25,6 +25,8 @@ public class EnemyAI : MonoBehaviour
 
     float minSqrDistance = 1f;
     bool canSeeTarget = false; // switch to true if enemy can see player and back to false they no longer can
+    bool canShoot = true; // if false enemy cannot shoot
+    float waitToShoot = 0.5f; // how long between shots
 
     /*******************************************************************************************************************************/
     /***************************************************Public Methods**************************************************************/
@@ -70,7 +72,12 @@ public class EnemyAI : MonoBehaviour
         {
             // attack the player
             PointGunAtTarget();
-            Attack();
+            
+            if ( canShoot == true )
+            {
+                StartCoroutine( Attack() );
+            }
+            
         }
 
     }
@@ -197,9 +204,15 @@ public class EnemyAI : MonoBehaviour
 
     }
 
-    void Attack()
+    IEnumerator Attack()
     {   
+        canShoot = false;
+
         weapon.Shoot();
+
+        yield return new WaitForSeconds(waitToShoot);
+
+        canShoot = true;
         
     }
 
