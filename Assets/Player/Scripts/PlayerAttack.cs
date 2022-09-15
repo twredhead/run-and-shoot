@@ -35,8 +35,4 @@ public class PlayerAttack : MonoBehaviour
         canShoot = true;
     }
 
-    void ShootTimer()
-    {
-
-    }
 }

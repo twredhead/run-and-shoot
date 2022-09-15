@@ -15,7 +15,8 @@ public class EnemyHealth : MonoBehaviour
 
         hitPoints -= hitPointsDamage;
 
-        enemyAI.SetIsPatrolling(false);       
+        enemyAI.SetIsPatrolling(false);   
+        enemyAI.SetIsAlerted(true);    
         
     }
 

@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +23,7 @@ public class EnemyAI : MonoBehaviour
 
     float minSqrDistance = 1f;
     bool canSeeTarget = false; // switch to true if enemy can see player and back to false they no longer can
+    bool isAlerted = false;
     bool canShoot = true; // if false enemy cannot shoot
     float waitToShoot = 0.5f; // how long between shots
 
@@ -37,6 +36,11 @@ public class EnemyAI : MonoBehaviour
         // change is patrolling from outside this script.
         isPatrolling = trueOrFalse;
     }
+    public void SetIsAlerted( bool trueOrFalse )
+    {
+        isAlerted = trueOrFalse;
+    }
+    
 
 
     /*******************************************************************************************************************************/
@@ -57,19 +61,22 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {   
-        if ( isPatrolling == false)
-        {
-            navigation.isStopped = true;
-        }
-        else
+
+        Debug.Log($"isPatrolling: {isPatrolling}");
+        Debug.Log($"isAlerted: {isAlerted}");
+        Debug.Log($"canSeePlayer: {canSeeTarget}");
+
+        if ( isPatrolling == true )
         {
             Patrol();
         }
 
-        LookForPlayer();
+        LookForTarget();
 
         if ( canSeeTarget == true )
         {
+            navigation.isStopped = true;
+
             // attack the player
             PointGunAtTarget();
             
@@ -79,7 +86,16 @@ public class EnemyAI : MonoBehaviour
             }
             
         }
+        else
+        {   
+            // if the target is no longer in sight object moves toward the target
+            navigation.isStopped = false;
+        }
 
+        if ( isAlerted == true && canSeeTarget == false)
+        {
+            MoveToTarget();
+        }
     }
 
 
@@ -90,7 +106,6 @@ public class EnemyAI : MonoBehaviour
 
     void Patrol()
     {   
-
         FindWaypoint();
 
         // don't crash if no waypoint is found.
@@ -145,7 +160,7 @@ public class EnemyAI : MonoBehaviour
     /***************************************************Find and Kill Player********************************************************/
     /*******************************************************************************************************************************/
 
-    void LookForPlayer()
+    void LookForTarget()
     {
         Vector3 searchDirection = DirectionToTarget(); // vector from position to target
 
@@ -155,6 +170,7 @@ public class EnemyAI : MonoBehaviour
             {
                 canSeeTarget = true;
                 isPatrolling = false;
+                isAlerted = true;
             }
             else
             {
@@ -163,6 +179,13 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
+    }
+
+    void MoveToTarget()
+    {
+        Vector3 direction = target.transform.position;
+
+        navigation.SetDestination(direction); 
     }
 
     Vector3 DirectionToTarget()
@@ -197,7 +220,6 @@ public class EnemyAI : MonoBehaviour
     {
         Vector3 targetDirection = (target.transform.position - weapon.transform.position).normalized;
 
-        // We only want to rotate the gun in the yz plane 
         Quaternion rotateTo = Quaternion.LookRotation( targetDirection );
 
         weapon.transform.rotation = Quaternion.Slerp(weapon.transform.rotation, rotateTo, Time.deltaTime * rotationSpeed);

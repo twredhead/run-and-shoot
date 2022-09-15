@@ -108,6 +108,10 @@ PlayerAttack notes:
 This script currently does one thing. It calls the public method FireWeapon() from
 Weapon() when the left mouse button is pressed down. 
 
+FireWeapon is now called in a coroutine called Shoot(). This coroutine waits forces
+the player to wait between shots.
+
+
 ************************************************************************************
 ************************************************************************************
 ************************************************************************************
@@ -145,7 +149,10 @@ Attack Player:
 If canSeeTarget is true, the enemy rotates toward the target in the xz plane. The
 weapon is also rotated toward the target, but it also rotates in the yz plane so
 that the weapon points toward the player if it is not on the ground. To attack
-the player Shoot from EnemyAttack.cs is called.
+the player Shoot from EnemyAttack.cs is called. To ensure that EnemyAttack.cs.Shoot()
+is not called every frame, it is now called in a coroutine. The coroutine waits 
+for a time, specified by 'float waitToShoot', to pass.
+If the player goes out of sight of the enemy, the enemy now chases the player.
 
 ************************************************************************************
 Notes:
@@ -170,10 +177,8 @@ Public Methods:
 - Shoot()
    This method calls FireWeapon from the Weapon.cs and shoots the gun.
 
-   ToDo: 
-   1. This method needs to be something like a coroutine to stop it from firing
-      every frame.
-   2. There needs to be a degree of randomness to whether the player is hit or not.
+   ToDo:
+   1. There needs to be a degree of randomness to whether the player is hit or not.
       Currently the player will be hit every time.
 
 
