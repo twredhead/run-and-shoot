@@ -18,7 +18,6 @@ public class Weapon : MonoBehaviour
     {
         if ( Physics.Raycast(shooter.transform.position, shooter.transform.forward, out hit, range) )
         {   
-            Debug.Log($"object hit: {hit.transform.name}");
             WeaponVFX();
             DealDamage();
         }

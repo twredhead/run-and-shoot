@@ -12,7 +12,8 @@ public class PlayerMovementControls : MonoBehaviour
 
     bool isAirborn = false;
     float currentVelocity;
-
+    float height;
+    
     Rigidbody rb;
 
     void Awake() 
@@ -23,19 +24,12 @@ public class PlayerMovementControls : MonoBehaviour
     void Start()
     {
         rb.freezeRotation = true;
-    }
-
-    void OnCollisionEnter(Collision other) 
-    {   
-        // identifies that the player is no longer airborn.
-        if( other.gameObject.tag == "surface")
-        {
-            isAirborn = false;
-        }
+        height = GetComponent<CapsuleCollider>().height;
     }
 
     void Update()
     {
+        CheckIfAirborn();
         PlayerMove();
         PlayerJump();
     }
@@ -85,9 +79,20 @@ public class PlayerMovementControls : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
-            isAirborn = true;
         }
         
+    }
+
+    void CheckIfAirborn()
+    {
+        if ( Physics.Raycast(transform.position, -transform.up, height/2 + 0.3f) )
+        {          
+            isAirborn = false;
+        }
+        else
+        {
+            isAirborn = true;
+        }
     }
 
     

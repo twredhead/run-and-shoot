@@ -144,7 +144,6 @@ public class EnemyAI : MonoBehaviour
 
         if (Physics.Raycast(transform.position, searchDirection, out objectInSight))
         {
-            Debug.Log($"object in sight: {objectInSight.transform.name}");
             if (objectInSight.transform.name == target.transform.name)
             {
                 canSeeTarget = true;

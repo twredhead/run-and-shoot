@@ -56,9 +56,8 @@ the WASD keys. The player can look around, and steer with the mouse. There are
 two speed that the player can move at and the player can jump. The movement 
 controlls are in the script PlayerMovementControls.cs, and the steering and looking
 mouse controls are in MouseLook.cs. These two scripts must be together on the 
-player game object, and the player game object must have a camera childed to it. 
-Additionally, any surface that is meant to be walked on needs to have the tag 
-"surface".
+player game object, and the player game object must have a camera childed to it.
+The player movement is physics based. 
 
 Functionality that could be added:
 1. Headbob, it could be nice to have some up and down motion while moving.
@@ -68,11 +67,10 @@ Functionality that could be added:
 ************************************************************************************
 PlayerMovementControls.cs notes:
 
-The tag, "surface" is used in OnCollisionEnter() to detect if the player 
-has collided with the ground. Collisions with "surface" objects sets the boolean
-flag, isAirborn, to false. The purpose of isAirborn is to turn off the ability
-to run and jump immediately after the player jumps (you cannot run, walk, or jump
-while still in the air). 
+The movement controls are turned off if the player is airborn. This is determined
+using a raycast downwards. The raycast has a distance of half the height of the
+collider plus a small amount. If the raycast hits anything, isAirborn is set to
+false, otherwise isAirborn is set to true. 
 
 ToDo: right now is airBorn is only switched to true when the player jumps. 
 It should also be switched if the player falls off something. 
