@@ -16,8 +16,9 @@ public class Weapon : MonoBehaviour
 
     public void FireWeapon()
     {
-        if ( Physics.Raycast(transform.position, shooter.transform.forward, out hit, range) )
+        if ( Physics.Raycast(shooter.transform.position, shooter.transform.forward, out hit, range) )
         {   
+            Debug.Log($"object hit: {hit.transform.name}");
             WeaponVFX();
             DealDamage();
         }
@@ -41,8 +42,7 @@ public class Weapon : MonoBehaviour
 
     void WeaponVFX()
     {
-        if (gunShotVFX == null) { return; }
-
+        
         FireWeaponVFX();
 
         if (hit.transform.tag != "enemy" && hit.transform.tag != "player") { return; }
@@ -55,11 +55,15 @@ public class Weapon : MonoBehaviour
 
     void FireWeaponVFX()
     {
+        if (gunShotVFX == null) { return; }
+
         gunShotVFX.Play();
     }
 
     void EnemyHitVFX()
     {   
+        if (enemyHitVFX == null) { return; }
+
         // instantiate the enemy hit vfx at the point of impact, and make sure it is oriented normal to the surface of the object hit.
         GameObject impact = Instantiate(enemyHitVFX, hit.point, Quaternion.LookRotation(hit.normal));
         Destroy(impact, 1); // get rid of the effect after 1 second

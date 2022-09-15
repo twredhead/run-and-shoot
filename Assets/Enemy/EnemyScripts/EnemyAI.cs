@@ -8,7 +8,7 @@ public class EnemyAI : MonoBehaviour
 {   
 
     [SerializeField] EnemyAttack weapon;
-    [SerializeField] Transform target; // look to see this. If you can see it. Shoot at it.
+    [SerializeField] GameObject target; // look to see this. If you can see it. Shoot at it.
 
     // flag to turn on, or off patrolling. If enemy is aware of the player, is patrolling becomes false
     [SerializeField] bool isPatrolling = true; // turn this off if you want a sentry.
@@ -144,7 +144,8 @@ public class EnemyAI : MonoBehaviour
 
         if (Physics.Raycast(transform.position, searchDirection, out objectInSight))
         {
-            if (objectInSight.transform == target)
+            Debug.Log($"object in sight: {objectInSight.transform.name}");
+            if (objectInSight.transform.name == target.transform.name)
             {
                 canSeeTarget = true;
                 isPatrolling = false;
@@ -160,7 +161,7 @@ public class EnemyAI : MonoBehaviour
 
     Vector3 DirectionToTarget()
     {
-        return target.position - transform.position;
+        return target.transform.position - transform.position;
     }
 
     void PointGunAtTarget()
@@ -188,7 +189,7 @@ public class EnemyAI : MonoBehaviour
 
     void RotateGunTowardTarget()
     {
-        Vector3 targetDirection = DirectionToTarget().normalized;
+        Vector3 targetDirection = (target.transform.position - weapon.transform.position).normalized;
 
         // We only want to rotate the gun in the yz plane 
         Quaternion rotateTo = Quaternion.LookRotation( targetDirection );
