@@ -6,14 +6,15 @@ public class EnemyAI : MonoBehaviour
 {   
 
     [SerializeField] EnemyAttack weapon;
-    [SerializeField] GameObject target; // look to see this. If you can see it. Shoot at it.
 
     // flag to turn on, or off patrolling. If enemy is aware of the player, is patrolling becomes false
     [SerializeField] bool isPatrolling = true; // turn this off if you want a sentry.
     [SerializeField] float rotationSpeed = 10f;
     [SerializeField] int skill = 5;
+    [SerializeField] Vector3 perturbation = new Vector3(1f, 0f, 0f );
     [SerializeField] float waitToShoot = 1f; // how long between shots
 
+    GameObject target; // look to see this. If you can see it. Shoot at it.
     Waypoint[] waypoints;
     NavMeshAgent navigation;
 
@@ -58,16 +59,13 @@ public class EnemyAI : MonoBehaviour
     {
         // find all the waypoints in the world
         waypoints = FindObjectsOfType<Waypoint>();
+        target = GameObject.FindGameObjectWithTag("player");
 
     }
 
 
     void Update()
     {   
-
-        Debug.Log($"isPatrolling: {isPatrolling}");
-        Debug.Log($"isAlerted: {isAlerted}");
-        Debug.Log($"canSeePlayer: {canSeeTarget}");
 
         if ( isPatrolling == true )
         {
@@ -165,6 +163,9 @@ public class EnemyAI : MonoBehaviour
 
     void LookForTarget()
     {
+
+        if ( target == null ) { return; } // don't crash
+
         Vector3 searchDirection = DirectionToTarget(); // vector from position to target
 
         if (Physics.Raycast(transform.position, searchDirection, out objectInSight))
@@ -186,13 +187,17 @@ public class EnemyAI : MonoBehaviour
 
     void MoveToTarget()
     {
-        Vector3 direction = target.transform.position;
+        if ( target == null ) { return; }
 
-        navigation.SetDestination(direction); 
+        Vector3 location = target.transform.position;
+
+        navigation.SetDestination(location); 
     }
 
     Vector3 DirectionToTarget()
     {
+        if ( target == null ) { return new Vector3 (0,0,0); }
+
         return target.transform.position - transform.position;
     }
 
@@ -221,6 +226,8 @@ public class EnemyAI : MonoBehaviour
 
     void AimAtTarget()
     {
+        if ( target == null ) { return; }
+
         // skill based target direction
         Vector3 targetDirection = (target.transform.position - weapon.transform.position).normalized;
 
@@ -232,9 +239,9 @@ public class EnemyAI : MonoBehaviour
 
     public Vector3 PerturbedTargetDirection()
     {
-        int hitChance = Random.Range(0,10);
+        if ( target == null ) { return new Vector3(0,0,0); }
 
-        Vector3 perturbation = new Vector3(1f, 0f, 1f );
+        int hitChance = Random.Range(0,10);
 
         if (hitChance >= skill)
         {
