@@ -34,6 +34,8 @@ public class EnemyHealth : MonoBehaviour
     {
         if ( hitPoints <= 0 )
         {   
+            enemyAI.enabled = false; // don't let the enemy do things anymore
+
             // in a larger project this should be changed to deactivate the enemy. Not destroy it.
             Destroy(gameObject, deathWaitTime); 
 
