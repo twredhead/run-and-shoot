@@ -13,6 +13,7 @@ public class Weapon : MonoBehaviour
 
     RaycastHit hit;
     EnemyHealth enemyHealth;
+    PlayerHealth playerHealth;
 
     public void FireWeapon()
     {
@@ -31,11 +32,15 @@ public class Weapon : MonoBehaviour
 
             if ( enemyHealth == null ) { return; } // protect against crash
 
-            enemyHealth.DamageTaken(hitPointsDamage);
+            enemyHealth.EnemyDamageTaken(hitPointsDamage);
         }
         else if ( hit.transform.tag == "player" )
         {
-            // damage player health
+            playerHealth = hit.transform.GetComponent<PlayerHealth>();
+
+            if ( playerHealth == null ) { return; }
+
+            playerHealth.PlayerDamageTaken(hitPointsDamage);
         }
     }
 

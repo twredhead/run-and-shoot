@@ -10,7 +10,7 @@ public class EnemyHealth : MonoBehaviour
     float deathWaitTime = 1f;
     EnemyAI enemyAI;
 
-    public void DamageTaken(float hitPointsDamage)
+    public void EnemyDamageTaken(float hitPointsDamage)
     {
 
         hitPoints -= hitPointsDamage;
