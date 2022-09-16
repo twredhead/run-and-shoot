@@ -11,6 +11,8 @@ public class EnemyAI : MonoBehaviour
     // flag to turn on, or off patrolling. If enemy is aware of the player, is patrolling becomes false
     [SerializeField] bool isPatrolling = true; // turn this off if you want a sentry.
     [SerializeField] float rotationSpeed = 10f;
+    [SerializeField] int skill = 5;
+    [SerializeField] float waitToShoot = 1f; // how long between shots
 
     Waypoint[] waypoints;
     NavMeshAgent navigation;
@@ -25,7 +27,7 @@ public class EnemyAI : MonoBehaviour
     bool canSeeTarget = false; // switch to true if enemy can see player and back to false they no longer can
     bool isAlerted = false;
     bool canShoot = true; // if false enemy cannot shoot
-    float waitToShoot = 0.5f; // how long between shots
+    
 
     /*******************************************************************************************************************************/
     /***************************************************Public Methods**************************************************************/
@@ -56,6 +58,7 @@ public class EnemyAI : MonoBehaviour
     {
         // find all the waypoints in the world
         waypoints = FindObjectsOfType<Waypoint>();
+
     }
 
 
@@ -198,7 +201,7 @@ public class EnemyAI : MonoBehaviour
         
         RotateBodyTowardTarget();
 
-        RotateGunTowardTarget();
+        AimAtTarget();
         
     }
 
@@ -216,14 +219,31 @@ public class EnemyAI : MonoBehaviour
 
     }
 
-    void RotateGunTowardTarget()
+    void AimAtTarget()
     {
+        // skill based target direction
         Vector3 targetDirection = (target.transform.position - weapon.transform.position).normalized;
 
         Quaternion rotateTo = Quaternion.LookRotation( targetDirection );
 
         weapon.transform.rotation = Quaternion.Slerp(weapon.transform.rotation, rotateTo, Time.deltaTime * rotationSpeed);
 
+    }
+
+    public Vector3 PerturbedTargetDirection()
+    {
+        int hitChance = Random.Range(0,10);
+
+        Vector3 perturbation = new Vector3(1f, 0f, 1f );
+
+        if (hitChance >= skill)
+        {
+            return (target.transform.position + perturbation - weapon.transform.position).normalized;
+        }
+        else
+        {
+            return (target.transform.position - weapon.transform.position).normalized;
+        }
     }
 
     IEnumerator Attack()

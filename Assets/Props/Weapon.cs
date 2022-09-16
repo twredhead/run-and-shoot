@@ -15,9 +15,9 @@ public class Weapon : MonoBehaviour
     EnemyHealth enemyHealth;
     PlayerHealth playerHealth;
 
-    public void FireWeapon()
-    {
-        if ( Physics.Raycast(shooter.transform.position, shooter.transform.forward, out hit, range) )
+    public void FireWeapon(Vector3 direction)
+    {   
+        if ( Physics.Raycast(shooter.transform.position, direction, out hit, range) )
         {   
             WeaponVFX();
             DealDamage();

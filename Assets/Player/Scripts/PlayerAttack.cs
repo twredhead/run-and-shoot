@@ -28,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
     {   
         canShoot = false;
         
-        weapon.FireWeapon();
+        weapon.FireWeapon(transform.forward);
         
         yield return new WaitForSeconds(waitToShoot);
         

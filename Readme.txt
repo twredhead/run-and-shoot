@@ -28,10 +28,11 @@ Neutral scripts (not player or enemy):
    should be fiddled with in the inspector. This field is how far the raycast can go.
    
    Public Methods: 
-   - FireWeapon()
+   - FireWeapon(Vector3 direction)
       This method uses a raycast to simulate a bullet. It handles the vfx for the gun
       being fired, and it also handles the vfx for visual feedback on what has been hit.
       This method also deals damage to any enemy hit by the raycast.
+      The direction is a parameter as this helps the AI miss sometimes.
 
       TODO: 
       1. Add a vfx for hitting the environment, not just the player or enemy.
@@ -45,7 +46,7 @@ Neutral scripts (not player or enemy):
 ************************************************************************************
       
 
-Player Controls 
+Player Controls
 
 ************************************************************************************
 ************************************************************************************
@@ -111,6 +112,22 @@ Weapon() when the left mouse button is pressed down.
 FireWeapon is now called in a coroutine called Shoot(). This coroutine waits forces
 the player to wait between shots.
 
+************************************************************************************
+************************************************************************************
+Player Health
+
+Player health is taken care of in the script PlayerHealth.cs. The player has a 
+preset number of hit points as a serialized field. When hit, the player health 
+is decreased by a float passed into PlayerDamageTaken(float hitPointsDamage). 
+When the hit points are less than zero, the player game is over.
+
+************************************************************************************
+Notes:
+
+Public Methods:
+- void PlayerDamageTaken(float hitPointsDamage)
+   This method reduces the player health by hitPointsDamage when called.
+
 
 ************************************************************************************
 ************************************************************************************
@@ -152,16 +169,25 @@ that the weapon points toward the player if it is not on the ground. To attack
 the player Shoot from EnemyAttack.cs is called. To ensure that EnemyAttack.cs.Shoot()
 is not called every frame, it is now called in a coroutine. The coroutine waits 
 for a time, specified by 'float waitToShoot', to pass.
-If the player goes out of sight of the enemy, the enemy now chases the player.
+If the player goes out of sight of the enemy, the enemy now chases the player. 
 
 ************************************************************************************
 Notes:
 
 Public Methods:
-- IsPatrolling(bool trueOrFalse) 
+- void IsPatrolling(bool trueOrFalse) 
    This method is used to set the bool isPatrolling to true or false based on
    the input parameter.
 
+- Vector3 PerturbedTargetDirection()
+   This method returns either the exact direction from the weapon to the target
+   or it returns a perturbed direction. Which it is depends on a random number
+   generated within. If the number is greater or equal to 'float skill' the 
+   method returns the perturbed direction. This is to simulate some sort of skill
+   level in the enemy. It would be a bummer as the player to get hit everytime
+   the enemy shoots. 
+   This method is public such that it can be called in EnemyAttack.cs.
+   
 
 ************************************************************************************
 ************************************************************************************
