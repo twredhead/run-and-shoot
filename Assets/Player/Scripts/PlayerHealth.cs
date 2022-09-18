@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] float hitPoints = 50f;
+    public float HitPoints { get { return hitPoints; } } // needed for health bar
+    
 
     private void Update() 
     {
