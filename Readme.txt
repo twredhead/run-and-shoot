@@ -144,6 +144,13 @@ Public Methods:
 - hitPoints is now a property of PlayerHealth. This is so that the Health Bar 
   can access the current number of hit points.
 
+************************************************************************************
+************************************************************************************
+Player Death
+
+When the player dies PlayerHealth.cs calls the method HandleDeath() from 
+PlayerDeath.cs. This method enables the Game Over canvas, and it makes the mouse 
+visible, and sets Cursor lock mode to none.
 
 ************************************************************************************
 ************************************************************************************
@@ -275,6 +282,17 @@ The amount of ammo that the player has is shown on the UI. The amount of ammo
 is accessed from the property AmmoAmount from PlayerAttack. This script must be on 
 a TMP game object.
 
+************************************************************************************
+************************************************************************************
+
+Game Over Canvas
+************************************************************************************
+
+The game over canvas is disabled on start by the PlayerDeath.cs script. It is re-
+enabled when the player dies. The buttons depend on an empty game object called 
+LevelManager. This game object has a script called LevelLoader.cs. LevelLoader.cs
+supplies the scripts to use in the appropriate buttons on the canvas which are 
+assigned using OnClick in the button component.
 
 ************************************************************************************
 ************************************************************************************

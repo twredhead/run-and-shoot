@@ -11,15 +11,22 @@ public class Weapon : MonoBehaviour
     [SerializeField] ParticleSystem gunShotVFX;
     [SerializeField] GameObject enemyHitVFX;
 
+
     RaycastHit hit;
     EnemyHealth enemyHealth;
     PlayerHealth playerHealth;
+    AudioSource gunShotSFX;
+
+    void Awake() 
+    {
+        gunShotSFX = GetComponent<AudioSource>();    
+    }
 
     public void FireWeapon(Vector3 direction)
     {   
         if ( Physics.Raycast(shooter.transform.position, direction, out hit, range) )
         {   
-            WeaponVFX();
+            WeaponFX();
             DealDamage();
         }
     }
@@ -44,10 +51,12 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    void WeaponVFX()
+    void WeaponFX()
     {
         
         FireWeaponVFX();
+        
+        FireWeaponSFX();
 
         if (hit.transform.tag != "enemy" && hit.transform.tag != "player") { return; }
 
@@ -62,6 +71,12 @@ public class Weapon : MonoBehaviour
         if (gunShotVFX == null) { return; }
 
         gunShotVFX.Play();
+        
+    }
+
+    void FireWeaponSFX()
+    {
+        gunShotSFX.PlayOneShot(gunShotSFX.clip,1f);
     }
 
     void EnemyHitVFX()
@@ -70,6 +85,8 @@ public class Weapon : MonoBehaviour
 
         // instantiate the enemy hit vfx at the point of impact, and make sure it is oriented normal to the surface of the object hit.
         GameObject impact = Instantiate(enemyHitVFX, hit.point, Quaternion.LookRotation(hit.normal));
+        
+        
         Destroy(impact, 1); // get rid of the effect after 1 second
     }
 
