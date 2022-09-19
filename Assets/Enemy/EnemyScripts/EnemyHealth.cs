@@ -6,9 +6,10 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] float hitPoints = 10f;
+    [SerializeField] GameObject enemyDeathVFX;
 
-    float deathWaitTime = 1f;
     EnemyAI enemyAI;
+    GameObject vfxContainer;
 
     public void EnemyDamageTaken(float hitPointsDamage)
     {
@@ -23,6 +24,9 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         enemyAI = GetComponent<EnemyAI>();
+
+        vfxContainer = GameObject.FindGameObjectWithTag("vfxcontainer");
+
     }
 
     void Update() 
@@ -36,10 +40,11 @@ public class EnemyHealth : MonoBehaviour
         {   
             enemyAI.enabled = false; // don't let the enemy do things anymore
 
-            // in a larger project this should be changed to deactivate the enemy. Not destroy it.
-            Destroy(gameObject, deathWaitTime); 
+            GameObject funnyDeathVFX = Instantiate(enemyDeathVFX, transform.position, Quaternion.identity, vfxContainer.transform);
 
-            // todo: add a funny vfx for enemy death
+            // in a larger project this should be changed to deactivate the enemy. Not destroy it.
+            Destroy(gameObject); 
+  
         }
     }
 }

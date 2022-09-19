@@ -10,6 +10,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] Transform shooter;
     [SerializeField] ParticleSystem gunShotVFX;
     [SerializeField] GameObject enemyHitVFX;
+    
 
 
     RaycastHit hit;
