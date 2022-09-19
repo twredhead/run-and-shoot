@@ -8,6 +8,8 @@ TagManager:
   - environment
   - player
   - enemy
+  - vfxcontainer
+  - playerhud
   layers:
   - Default
   - TransparentFX

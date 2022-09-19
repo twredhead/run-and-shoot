@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class GameOver : MonoBehaviour
 {   
-    // This script just exists so that this canvas can be found.
+    // This script just exists so that the GameOverCanvas can be found.
 }

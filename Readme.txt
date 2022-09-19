@@ -273,8 +273,6 @@ has 1/3 of their starting health.
 
 
 ************************************************************************************
-************************************************************************************
-
 Ammo 
 ************************************************************************************
 
@@ -283,8 +281,6 @@ is accessed from the property AmmoAmount from PlayerAttack. This script must be 
 a TMP game object.
 
 ************************************************************************************
-************************************************************************************
-
 Game Over Canvas
 ************************************************************************************
 
@@ -293,6 +289,25 @@ enabled when the player dies. The buttons depend on an empty game object called
 LevelManager. This game object has a script called LevelLoader.cs. LevelLoader.cs
 supplies the scripts to use in the appropriate buttons on the canvas which are 
 assigned using OnClick in the button component.
+
+************************************************************************************
+Escape Menu
+************************************************************************************
+
+When the player presses ESCAPE, an escape menu is made visible. The player is given
+the option to resume, restart, or exit the application. Pressing escape again will
+close the escape menu, however you can also press a UI button. The script involved
+in toggling the escape menu is EscapeMenu.cs. It is attached to the EscapeMenuCanvas.
+
+************************************************************************************
+Start Screen
+************************************************************************************
+
+The start screen is just a UI canvas that has a script called StartScript.cs which
+disables other UI canvases, and the player controls. When any key is pressed, the
+player controls are enabled, as are the other UI canvases. The start canvas then
+disables itself, and there is no way to re-enable other than to restart the
+application.
 
 ************************************************************************************
 ************************************************************************************
