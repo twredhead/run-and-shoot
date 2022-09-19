@@ -41,7 +41,7 @@ Neutral scripts (not player or enemy):
          FireWeapon().
 
 
-***********************************************************************************
+************************************************************************************
 ************************************************************************************
 ************************************************************************************
       
@@ -110,7 +110,13 @@ This script currently does one thing. It calls the public method FireWeapon() fr
 Weapon() when the left mouse button is pressed down. 
 
 FireWeapon is now called in a coroutine called Shoot(). This coroutine waits forces
-the player to wait between shots.
+the player to wait between shots. 
+
+When the weapon is fired the amount of ammo on the player is decreased by one. 
+The amount of ammo can only be increased from the public method 
+IncreaseAmmo(int amount). Currently, this method is called in PickUps.cs when the
+pick up type is ammo. 
+
 
 ************************************************************************************
 ************************************************************************************
@@ -119,7 +125,7 @@ Player Health
 Player health is taken care of in the script PlayerHealth.cs. The player has a 
 preset number of hit points as a serialized field. When hit, the player health 
 is decreased by a float passed into PlayerDamageTaken(float hitPointsDamage). 
-When the hit points are less than zero, the player game is over.
+When the hit points are less than zero, the player game is over. 
 
 ************************************************************************************
 Notes:
@@ -127,6 +133,16 @@ Notes:
 Public Methods:
 - void PlayerDamageTaken(float hitPointsDamage)
    This method reduces the player health by hitPointsDamage when called.
+
+- void IncreaseHitPoints(float amount )
+  This method is used for health pick ups. If the amount of health specified by the
+  parameter 'float amount' plus the current number of hit points is less than the
+  maximum number of hit points, the hit points are increased to hitPoints + amount.
+  Otherwise, the hit points are increased to maxHitPoints. Currently, this method
+  is only called in the script PickUps which is attached to the pick up object prefab.
+  
+- hitPoints is now a property of PlayerHealth. This is so that the Health Bar 
+  can access the current number of hit points.
 
 
 ************************************************************************************
@@ -227,6 +243,54 @@ Public Methods:
 
 Todo: it would be fun to add a funny vfx for enemy death. Currently the enemy will 
 simply disappear when hitPoint <= 0. 
+
+
+************************************************************************************
+************************************************************************************
+************************************************************************************
+
+User Interface
+
+************************************************************************************
+************************************************************************************
+
+Health Bar
+************************************************************************************
+
+The health bar has a script called HealthBar.cs. This script references the player
+script PlayerHealth.cs to get the current number of hit points. As the player hit
+points are reduced, the area filling the health bar border decreases, showing
+the player that they are losing health. The colour of the health bar changes
+to yellow once the player has half their starting health, and red when the player
+has 1/3 of their starting health.
+
+
+************************************************************************************
+************************************************************************************
+
+Ammo 
+************************************************************************************
+
+The amount of ammo that the player has is shown on the UI. The amount of ammo 
+is accessed from the property AmmoAmount from PlayerAttack. This script must be on 
+a TMP game object.
+
+
+************************************************************************************
+************************************************************************************
+************************************************************************************
+
+Pick Ups
+
+************************************************************************************
+************************************************************************************
+
+There are two types of pick ups in the game. Health pickups and ammo pickups. The 
+type of pick up is set by choosing ticking the serialized field isHealth or isAmmo.
+You can also select both. The colour of the pick up depends on the type. If the type
+is both, the colour is a 50/50 combination of the colours using Color.Lerp(a,b,t).
+The pick up uses OnTriggerEnter() to give the player more health, or more ammo, or 
+both.
 
 
 

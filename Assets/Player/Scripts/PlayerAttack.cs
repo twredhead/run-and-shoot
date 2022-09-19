@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+
+    [SerializeField] int ammoAmount = 10;
+    public int AmmoAmmount { get { return ammoAmount; } }
+
     Weapon weapon;
 
     float waitToShoot = .5f;
 
     bool canShoot = true;
+
+    public void IncreaseAmmo(int amount)
+    {
+        ammoAmount += amount;
+    }
+
     void Start()
     {
 
@@ -18,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {   
-        if (Input.GetMouseButtonDown(0) && canShoot == true ) 
+        if (Input.GetMouseButtonDown(0) && canShoot == true && ammoAmount > 0) 
         {
             StartCoroutine(Shoot());
         }      
@@ -29,6 +39,8 @@ public class PlayerAttack : MonoBehaviour
         canShoot = false;
         
         weapon.FireWeapon(transform.forward);
+
+        ammoAmount--; // decrease ammo when weapon is fired.
         
         yield return new WaitForSeconds(waitToShoot);
         

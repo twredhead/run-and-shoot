@@ -4,9 +4,28 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] float hitPoints = 50f;
+    [SerializeField] float maxHitPoints = 50f;
+    
+    float hitPoints;
     public float HitPoints { get { return hitPoints; } } // needed for health bar
     
+    public void IncreaseHitPoints(float amount)
+    {
+        if ( hitPoints + amount <= maxHitPoints )
+        {
+            hitPoints += amount;
+        }
+        else
+        {
+            hitPoints = maxHitPoints;
+        }
+    }
+
+    
+    void Awake() 
+    {
+        hitPoints = maxHitPoints;
+    }
 
     private void Update() 
     {
