@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,19 +15,19 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] Vector3 perturbation = new Vector3(1f, 0f, 0f );
     [SerializeField] float waitToShoot = 1f; // how long between shots
 
-    GameObject target; // look to see this. If you can see it. Shoot at it.
-    Waypoint[] waypoints;
     NavMeshAgent navigation;
+    GameObject target; // look to see this. If you can see it. Shoot at it.
+    List<Waypoint> waypoints;
+    [SerializeField] Vector3[] patrolPoints = new Vector3[2]; // holds the terminals of the enemy patrol
+    
 
-    // destination waypoint
-    Transform destination;
-    Transform lastDestination;
 
     RaycastHit objectInSight;
-
-    float minSqrDistance = 1f;
+    Vector3 nullVector = new Vector3(0f,0f,0f);
+    [SerializeField] Vector3 currentDestination; // patrol destination. Updated when reached
+    float minDistanceToWaypoint = 0.1f;
     bool canSeeTarget = false; // switch to true if enemy can see player and back to false they no longer can
-    bool isAlerted = false;
+    bool isAlerted = false; // swithc to true when the enemy has seen the player, or been shot by the player
     bool canShoot = true; // if false enemy cannot shoot
     
 
@@ -45,7 +46,6 @@ public class EnemyAI : MonoBehaviour
     }
     
 
-
     /*******************************************************************************************************************************/
     /***************************************************Awake, Start, Update********************************************************/
     /*******************************************************************************************************************************/    
@@ -55,14 +55,16 @@ public class EnemyAI : MonoBehaviour
            
     }
 
-    void Start() 
+    void Start()
     {
-        // find all the waypoints in the world
-        waypoints = FindObjectsOfType<Waypoint>();
+        // set the two patrol points used for navigating the patrol route.
+        FindPatrolPoints();
+
+        currentDestination = patrolPoints[0]; // initialize the patrol destination
+
         target = GameObject.FindGameObjectWithTag("player");
 
     }
-
 
     void Update()
     {   
@@ -103,56 +105,83 @@ public class EnemyAI : MonoBehaviour
     /*******************************************************************************************************************************/
 
     void Patrol()
-    {   
-        FindWaypoint();
+    {
 
-        // don't crash if no waypoint is found.
-        if ( destination == null) { return; }
+        navigation.SetDestination(currentDestination);
+        Debug.Log($"Has a path : {navigation.hasPath}");
+        Debug.Log($"terminal position: {navigation.pathEndPosition}");
 
-        // move toward the destination
-        navigation.SetDestination(destination.position);
-
-        // set lastDestination to destination shortly before arriving.
-        if ( Vector3.SqrMagnitude( transform.position - destination.position) < minSqrDistance + 0.5 )
-        {
-            lastDestination = destination;
+        if (navigation.pathEndPosition == transform.position)
+        {   
+            FindNextPatrolPoint();
+            navigation.ResetPath();
+            
         }
 
     }
 
-    void FindWaypoint()
+
+    void FindNextPatrolPoint()
     {   
-        Transform waypoint;
-
-        float nearestSqrDistance = Mathf.Infinity;
-
-        // only care about distances in xz plane
-        Vector2 position = new Vector2(transform.position.x, transform.position.z);
-        
-        // iterate through each waypoint in waypoints to find the closest waypoint
-        for (int i = 0; i < waypoints.Length; i++)
+        // find which patrol point was the last destination, then set the current destination to the vector
+        // that was NOT the last destination
+        foreach (Vector3 vector in patrolPoints)
         {
-            waypoint = waypoints[i].transform;
-            
-            // location of waypoint
-            Vector2 waypointPosition = new Vector3(waypoint.position.x, waypoint.position.z);
+            if (vector != currentDestination)
+            {   
+                currentDestination = vector;
 
-            float sqrDistance = Vector2.SqrMagnitude(position - waypointPosition);
+                return;
+            }
+        }
+    }
 
-            if ( sqrDistance < nearestSqrDistance && sqrDistance > minSqrDistance)
-            {
-                nearestSqrDistance = sqrDistance;
+    void FindPatrolPoints()
+    {   
+        // Only care about distances in xz plane
+        Vector2 enemyPosition = new Vector2 ( transform.position.x, transform.position.z );
 
-                // if we have arrived at a destination it will be the closest. We need a new destination.
-                if ( waypoint != lastDestination)
+        waypoints = new List<Waypoint>(FindObjectsOfType<Waypoint>());
+
+        Waypoint closestWaypoint = null;
+
+        float closestWaypointDistance = Mathf.Infinity;
+        
+        // iterate through the index of patrolPoints (which is empty at the start)
+        for (int i = 0; i < patrolPoints.Length; i++)
+        {
+            // find the closest waypoint in waypoints.
+            for (int j = 0; j < waypoints.Count; j++)
+            {   
+                Vector2 waypointPosition = new Vector2 ( waypoints[j].transform.position.x, waypoints[j].transform.position.z );
+
+                // distance from waypoint i in list to enemy object.
+                float distance = Vector3.SqrMagnitude(waypointPosition - enemyPosition);
+
+                // if the current waypoint is closer than the last closest, this is the closest waypoint known so far
+                if (distance < closestWaypointDistance)
                 {
-                    destination = waypoint;
+
+                    closestWaypointDistance = distance;
+
+                    closestWaypoint = waypoints[j];
+
                 }
+
             }
 
+            // Having found the first patrol point, reset the closest waypoint distance to infinity
+            closestWaypointDistance = Mathf.Infinity;
+
+            // remove the closest waypoint from the list of waypoints, such that the next waypoint found is not 
+            // the same waypoint.
+            waypoints.Remove(closestWaypoint);
+
+            patrolPoints[i] = closestWaypoint.transform.position;
+
         }
-        
     }
+
 
     /*******************************************************************************************************************************/
     /***************************************************Find and Kill Player********************************************************/
