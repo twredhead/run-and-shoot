@@ -57,6 +57,8 @@ public class StartScript : MonoBehaviour
             EnablePlayerControls();
 
             Time.timeScale = 1;
+
+            Destroy(gameObject); // get rid of this canvas
         }
     }
 

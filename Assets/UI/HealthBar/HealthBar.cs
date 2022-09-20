@@ -8,6 +8,7 @@ public class HealthBar : MonoBehaviour
     [SerializeField] Image healthFill;
     Slider slider;
     PlayerHealth playerHealth;
+    Color defaultColor = Color.green;
     float maxHitPoints; // get this from the PlayerHealth script
     
 
@@ -18,7 +19,7 @@ public class HealthBar : MonoBehaviour
 
         playerHealth = FindObjectOfType<PlayerHealth>();
 
-        healthFill.color = Color.green;
+        healthFill.color = defaultColor;
 
         // if no player, don't crash
         if (playerHealth == null) { return; }
@@ -51,9 +52,13 @@ public class HealthBar : MonoBehaviour
         {
             healthFill.color = Color.yellow;
         }
-        if ( slider.value <= maxHitPoints / 3 )
+        else if ( slider.value <= maxHitPoints / 3 )
         {
             healthFill.color = Color.red;
+        }
+        else
+        {
+            healthFill.color = defaultColor;
         }
     }
 }

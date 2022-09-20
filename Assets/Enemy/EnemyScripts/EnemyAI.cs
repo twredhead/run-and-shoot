@@ -87,16 +87,13 @@ public class EnemyAI : MonoBehaviour
             }
             
         }
-        else
-        {   
-            // if the target is no longer in sight object moves toward the target
-            navigation.isStopped = false;
-        }
-
-        if ( isAlerted == true && canSeeTarget == false)
+        else if ( isAlerted == true && canSeeTarget == false)
         {
+            navigation.isStopped = false;
             MoveToTarget();
         }
+
+
     }
 
 

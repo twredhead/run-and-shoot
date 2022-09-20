@@ -5,6 +5,8 @@ using UnityEngine;
 public class EscapeMenu : MonoBehaviour
 {
     PlayerAttack playerAttack;
+    PlayerMovementControls movementControls;
+    MouseLook mouseLook;
     Canvas escapeMenu;
 
     bool menuVisible = false;
@@ -16,6 +18,25 @@ public class EscapeMenu : MonoBehaviour
         escapeMenu.enabled = false; // hide the escape menu on start.
 
         playerAttack = FindObjectOfType<PlayerAttack>(); // this needs to be disabled on escape
+
+        movementControls = FindObjectOfType<PlayerMovementControls>();
+
+        mouseLook = FindObjectOfType<MouseLook>();
+    }
+
+
+    void DisablePlayerControls()
+    {
+        playerAttack.enabled = false;
+        movementControls.enabled = false;
+        mouseLook.enabled = false;
+    }
+
+    void EnablePlayerControls()
+    {
+        playerAttack.enabled = true;
+        movementControls.enabled = true;
+        mouseLook.enabled = true;
     }
 
     void Update()
@@ -44,7 +65,7 @@ public class EscapeMenu : MonoBehaviour
 
             menuVisible = true;
 
-            playerAttack.enabled = false;
+            DisablePlayerControls();
         }
     }
 
@@ -61,7 +82,7 @@ public class EscapeMenu : MonoBehaviour
 
             Time.timeScale = 1; // unpause the game
 
-            playerAttack.enabled = true;
+            EnablePlayerControls();
         }
 
     }
@@ -77,6 +98,6 @@ public class EscapeMenu : MonoBehaviour
 
         Time.timeScale = 1; // unpause the game
 
-        playerAttack.enabled = true;
+        EnablePlayerControls();
     }
 }
