@@ -34,12 +34,6 @@ Neutral scripts (not player or enemy):
       This method also deals damage to any enemy hit by the raycast.
       The direction is a parameter as this helps the AI miss sometimes.
 
-      TODO: 
-      1. Add a vfx for hitting the environment, not just the player or enemy.
-      2. Add functionality to damage player health if player is hit by raycast.
-      3. Make shooting a coroutine to stop the player, and the enemy, from spamming
-         FireWeapon().
-
 
 ************************************************************************************
 ************************************************************************************
@@ -72,10 +66,7 @@ The movement controls are turned off if the player is airborn. This is determine
 using a raycast downwards. The raycast has a distance of half the height of the
 collider plus a small amount. If the raycast hits anything, isAirborn is set to
 false, otherwise isAirborn is set to true. 
-
-ToDo: right now is airBorn is only switched to true when the player jumps. 
-It should also be switched if the player falls off something. 
-
+ 
 ************************************************************************************
 MouseLook.cs notes:
 
@@ -106,8 +97,8 @@ Currently, the only script that deals with player attacking is PlayerAttack.cs
 ************************************************************************************
 PlayerAttack notes:
 
-This script currently does one thing. It calls the public method FireWeapon() from
-Weapon() when the left mouse button is pressed down. 
+This script calls the public method FireWeapon() from Weapon() when the left mouse 
+button is pressed down. 
 
 FireWeapon is now called in a coroutine called Shoot(). This coroutine waits forces
 the player to wait between shots. 
@@ -194,6 +185,11 @@ is not called every frame, it is now called in a coroutine. The coroutine waits
 for a time, specified by 'float waitToShoot', to pass.
 If the player goes out of sight of the enemy, the enemy now chases the player. 
 
+The enemy has some randomness in if they hit the player or not. This is controlled
+by the serialized field 'float skill'. The skill is set to 5 by default. The 
+aiming logic is set such that there is approximately a 50% chance for the enemy to
+hit the player. The skill should never be larger than 10 or smaller than 0.
+
 ************************************************************************************
 Notes:
 
@@ -225,10 +221,6 @@ Notes:
 Public Methods:
 - Shoot()
    This method calls FireWeapon from the Weapon.cs and shoots the gun.
-
-   ToDo:
-   1. There needs to be a degree of randomness to whether the player is hit or not.
-      Currently the player will be hit every time.
 
 
 ************************************************************************************
