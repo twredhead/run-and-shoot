@@ -10,6 +10,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] Transform shooter;
     [SerializeField] ParticleSystem gunShotVFX;
     [SerializeField] GameObject enemyHitVFX;
+    [SerializeField] GameObject missVFX;
     
 
 
@@ -59,11 +60,17 @@ public class Weapon : MonoBehaviour
         
         FireWeaponSFX();
 
-        if (hit.transform.tag != "enemy" && hit.transform.tag != "player") { return; }
+        if (hit.transform.tag == "enemy" || hit.transform.tag == "player")
+        {
+            EnemyHitVFX();
+        }
+        else
+        {
+            MissVFX();
+        }
+        
 
-        EnemyHitVFX();
-
-        // todo: add a environment hit condition and add a vfx for it.
+        
 
     }
 
@@ -89,6 +96,15 @@ public class Weapon : MonoBehaviour
         
         
         Destroy(impact, 1); // get rid of the effect after 1 second
+    }
+
+    void MissVFX()
+    {
+        if ( missVFX == null ) { return; }
+
+        GameObject impact = Instantiate(missVFX, hit.point, Quaternion.LookRotation(hit.normal));
+
+        Destroy(impact, 1);
     }
 
 

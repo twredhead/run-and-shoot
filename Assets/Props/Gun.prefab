@@ -70,6 +70,7 @@ MonoBehaviour:
   shooter: {fileID: 0}
   gunShotVFX: {fileID: 2898146057910283908}
   enemyHitVFX: {fileID: 3039100851001815069, guid: 9df0eab9fc0357d43a4dc490d9dfbb04, type: 3}
+  missVFX: {fileID: 3039100851001815069, guid: bd477535b804c074997345bce4560a86, type: 3}
 --- !u!82 &-2983526555661453747
 AudioSource:
   m_ObjectHideFlags: 0

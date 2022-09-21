@@ -57,10 +57,7 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
-        // set the two patrol points used for navigating the patrol route.
-        FindPatrolPoints();
-
-        currentDestination = patrolPoints[0]; // initialize the patrol destination
+        InitializePatrol();
 
         target = GameObject.FindGameObjectWithTag("player");
 
@@ -104,19 +101,26 @@ public class EnemyAI : MonoBehaviour
     /***************************************************Navigation Methods**********************************************************/
     /*******************************************************************************************************************************/
 
+    void InitializePatrol()
+    {
+        // set the two patrol points used for navigating the patrol route.
+        FindPatrolPoints();
+
+        currentDestination = patrolPoints[0]; // initialize the patrol destination
+        navigation.SetDestination(currentDestination);
+    }
+    
     void Patrol()
     {
 
-        navigation.SetDestination(currentDestination);
-        Debug.Log($"Has a path : {navigation.hasPath}");
-        Debug.Log($"terminal position: {navigation.pathEndPosition}");
-
-        if (navigation.pathEndPosition == transform.position)
+        if (navigation.remainingDistance < minDistanceToWaypoint)
         {   
             FindNextPatrolPoint();
-            navigation.ResetPath();
             
+            navigation.ResetPath();   
         }
+
+        navigation.SetDestination(currentDestination);
 
     }
 

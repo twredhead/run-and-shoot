@@ -9,6 +9,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] GameObject enemyDeathVFX;
 
     EnemyAI enemyAI;
+    EnemyCount numberEnemies;
     GameObject vfxContainer;
 
     public void EnemyDamageTaken(float hitPointsDamage)
@@ -24,6 +25,8 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         enemyAI = GetComponent<EnemyAI>();
+
+        numberEnemies = FindObjectOfType<EnemyCount>();
 
         vfxContainer = GameObject.FindGameObjectWithTag("vfxcontainer");
 
@@ -41,6 +44,8 @@ public class EnemyHealth : MonoBehaviour
             enemyAI.enabled = false; // don't let the enemy do things anymore
 
             GameObject funnyDeathVFX = Instantiate(enemyDeathVFX, transform.position, Quaternion.identity, vfxContainer.transform);
+
+            numberEnemies.ReduceEnemyCount();
 
             // in a larger project this should be changed to deactivate the enemy. Not destroy it.
             Destroy(gameObject); 
