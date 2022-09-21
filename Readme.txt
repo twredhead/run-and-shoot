@@ -14,7 +14,39 @@ and have enemies patrol and shoot at the player when discovered.
 ************************************************************************************
 ************************************************************************************
 
-Neutral scripts (not player or enemy): 
+************************************************************************************
+Level Manager
+************************************************************************************
+
+The level manager has public methods pertaining to reloading the current level,
+quitting the game, and disabling/enabling the player controls.
+
+Public Methods:
+    void ReloadLevel()
+    - This can be called whenever it is required to reload the current scene.
+
+    void QuitGame()
+    - This allows the player to leave the application.
+    
+    void DisablePlayerControls()
+    - This disables the player controls, which is useful for menu screens as I have
+      them set up.
+    
+    void EnablePlayerControls()
+    - Re-enable player controls.
+
+************************************************************************************
+Victory Condition
+************************************************************************************
+
+The victory condition is in a script attached to an empty object called EnemyContainer.
+The victory condition is that the enemy container is empty. Each enemy in the scene
+must be in the enemy container or else it will not count toward the victory condition
+and the game will end without the (not included) being destroyed. Enemy health 
+uses the public method ReduceEnemyCount() when destroyed.
+
+************************************************************************************
+Weapon
 ************************************************************************************
 
 - Weapon.cs
@@ -166,7 +198,7 @@ For navigation the EnemyAI.cs script finds each instance of Waypoint in the scen
 iterates through an array containing their transforms in order find the closest Waypoint. 
 The destination is set to be the closest waypoint that is not equal to the last 
 destination. The navigation only occurs if the bool isPatrolling is set to true. 
-If damage is taken isPatrolling is set to true.
+If damage is taken isPatrolling is set to false.
 
 Searching for Player:
 
@@ -300,6 +332,14 @@ disables other UI canvases, and the player controls. When any key is pressed, th
 player controls are enabled, as are the other UI canvases. The start canvas then
 disables itself, and there is no way to re-enable other than to restart the
 application.
+
+************************************************************************************
+Victory Screen
+************************************************************************************
+
+The victory screen is turned on when all the enemies are destroyed. This is 
+controlled from the game object EnemyContainer which has the script 
+VictoryCondition.cs.
 
 ************************************************************************************
 ************************************************************************************

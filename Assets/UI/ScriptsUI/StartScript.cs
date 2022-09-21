@@ -1,17 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 public class StartScript : MonoBehaviour
 {
     
     Canvas startCanvas;
     Canvas playerHud;
-
-    PlayerAttack playerAttack;
-    PlayerMovementControls movementControls;
-    MouseLook mouseLook;
+    LevelManager levelManager;
     
 
     void Awake() 
@@ -25,26 +22,12 @@ public class StartScript : MonoBehaviour
 
         playerHud = GameObject.FindGameObjectWithTag("playerhud").GetComponent<Canvas>();
 
+        levelManager = FindObjectOfType<LevelManager>();
+
         playerHud.enabled = false;
 
-        DisablePlayerControls();
+        levelManager.DisablePlayerControls();
 
-    }
-
-    void DisablePlayerControls()
-    {   
-        
-        playerAttack = FindObjectOfType<PlayerAttack>();
-
-        playerAttack.enabled = false;
-
-        movementControls = FindObjectOfType<PlayerMovementControls>();
-
-        movementControls.enabled = false;
-
-        mouseLook = FindObjectOfType<MouseLook>();
-
-        mouseLook.enabled = false;
     }
 
     // Update is called once per frame
@@ -54,7 +37,9 @@ public class StartScript : MonoBehaviour
         {
             startCanvas.enabled = false;
 
-            EnablePlayerControls();
+            levelManager.EnablePlayerControls();
+
+            playerHud.enabled = true;
 
             Time.timeScale = 1;
 
@@ -62,11 +47,5 @@ public class StartScript : MonoBehaviour
         }
     }
 
-    void EnablePlayerControls()
-    {
-        playerHud.enabled = true;
-        playerAttack.enabled = true;
-        movementControls.enabled = true;
-        mouseLook.enabled = true;
-    }
+
 }

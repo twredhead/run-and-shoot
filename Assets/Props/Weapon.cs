@@ -12,23 +12,23 @@ public class Weapon : MonoBehaviour
     [SerializeField] GameObject enemyHitVFX;
     [SerializeField] GameObject missVFX;
     
-
-
     RaycastHit hit;
     EnemyHealth enemyHealth;
     PlayerHealth playerHealth;
     AudioSource gunShotSFX;
 
-    void Awake() 
+    void Start() 
     {
         gunShotSFX = GetComponent<AudioSource>();    
     }
 
     public void FireWeapon(Vector3 direction)
     {   
+        WeaponFX(); 
+
         if ( Physics.Raycast(shooter.transform.position, direction, out hit, range) )
         {   
-            WeaponFX();
+            ObjectHitVFX();
             DealDamage();
         }
     }
@@ -60,18 +60,6 @@ public class Weapon : MonoBehaviour
         
         FireWeaponSFX();
 
-        if (hit.transform.tag == "enemy" || hit.transform.tag == "player")
-        {
-            EnemyHitVFX();
-        }
-        else
-        {
-            MissVFX();
-        }
-        
-
-        
-
     }
 
     void FireWeaponVFX()
@@ -85,6 +73,18 @@ public class Weapon : MonoBehaviour
     void FireWeaponSFX()
     {
         gunShotSFX.PlayOneShot(gunShotSFX.clip,1f);
+    }
+
+    void ObjectHitVFX()
+    {
+        if (hit.transform.tag == "enemy" || hit.transform.tag == "player")
+        {
+            EnemyHitVFX();
+        }
+        else
+        {
+            MissVFX();
+        }  
     }
 
     void EnemyHitVFX()

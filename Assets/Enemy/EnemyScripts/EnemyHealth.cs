@@ -9,7 +9,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] GameObject enemyDeathVFX;
 
     EnemyAI enemyAI;
-    EnemyCount numberEnemies;
+    VictoryCondition numberEnemies;
     GameObject vfxContainer;
 
     public void EnemyDamageTaken(float hitPointsDamage)
@@ -26,7 +26,7 @@ public class EnemyHealth : MonoBehaviour
     {
         enemyAI = GetComponent<EnemyAI>();
 
-        numberEnemies = FindObjectOfType<EnemyCount>();
+        numberEnemies = FindObjectOfType<VictoryCondition>();
 
         vfxContainer = GameObject.FindGameObjectWithTag("vfxcontainer");
 

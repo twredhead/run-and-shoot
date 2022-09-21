@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5cbb846de6b6cc4980dd90e980a3c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 2
+  walkSpeed: 3
   runSpeed: 4
   jumpHeight: 4
   movementForce: 1000
@@ -96,8 +96,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0c2dbafeba8613428b85e0f333f15b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalLookSpeed: 550
-  verticalLookSpeed: 700
+  horizontalLookSpeed: 350
+  verticalLookSpeed: 400
   maxVerticalAngle: 75
   playerCamera: {fileID: 1785615219662523735}
 --- !u!114 &5214234119761518996
@@ -306,7 +306,7 @@ PrefabInstance:
     - target: {fileID: 8212759727384967865, guid: 9304262cee4a0e44faf22177c110d58d, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 13400000, guid: a87f3b22cf3fd6b4ca18c2175898abdd, type: 2}
+      objectReference: {fileID: 13400000, guid: 82d6521a66b0db94b999b9138ad6b95b, type: 2}
     - target: {fileID: 9080041331538853372, guid: 9304262cee4a0e44faf22177c110d58d, type: 3}
       propertyPath: m_CastShadows
       value: 0
